@@ -179,7 +179,7 @@ foreach ($data as $d) {
             </div>
             <div class="card-body">
               <div class="text-center">
-                <input type="text" class="knob" data-max="<?= ($nilai_bmi > 50) ? $nilai_bmi : 50; ?>" value="<?= number_format((float)$nilai_bmi, 1, '.', ''); ?>" data-angleArc="250" data-angleOffset="-125" data-width="100%" data-height="120" data-fgColor="#17a2b8" readonly>
+                <input type="text" class="knob" data-max="<?= ($nilai_bmi > 50) ? $nilai_bmi : 50; ?>" value="<?= number_format((float)$nilai_bmi, 1, '.', ''); ?>" data-angleArc="250" data-angleOffset="-125" data-step=".1" data-width="100%" data-height="120" data-fgColor="#17a2b8" readonly>
                 <div class="knob-label"><?= $status_bmi ? $status_bmi : "" ?></div>
               </div>
               <div class="text-left mt-5">
