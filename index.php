@@ -82,98 +82,156 @@ foreach ($data as $d) {
 
           <div class="card card-info">
             <div class="card-header">
-              <h3 class="card-title">Horizontal Form</h3>
+              <h3 class="card-title">Form BMI</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form class="form-horizontal">
+            <form class="form-horizontal" action="#" method="POST">
               <div class="card-body">
+                <!-- $id, $kode, $nama, $tmp_lahir, $tgl_lahir, $email, $gender; -->
                 <div class="form-group row">
-                  <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                  <label for="nama" class="col-sm-2 col-form-label">Nama</label>
                   <div class="col-sm-10">
-                    <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                    <input type="text" name="nama" class="form-control" id="nama" placeholder="Nama">
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+                  <label for="tmp_lahir" class="col-sm-2 col-form-label">Tempat Lahir</label>
                   <div class="col-sm-10">
-                    <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                    <input type="text" name="tmp_lahir" class="form-control" id="tmp_lahir" placeholder="Tempat Lahir">
                   </div>
                 </div>
                 <div class="form-group row">
-                  <div class="offset-sm-2 col-sm-10">
-                    <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="exampleCheck2">
-                      <label class="form-check-label" for="exampleCheck2">Remember me</label>
+                  <label for="tgl_lahir" class="col-sm-2 col-form-label">Tanggal Lahir</label>
+                  <div class="col-sm-10">
+                    <input type="date" name="tgl_lahir" class="form-control" id="tgl_lahir">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="email" class="col-sm-2 col-form-label">Email</label>
+                  <div class="col-sm-10">
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Email">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="gender" class="col-sm-2 col-form-label">Jenis Kelamin</label>
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <div class="form-check-inline">
+                        <input class="form-check-input" type="radio" name="gender" value="L">
+                        <label class="form-check-label">Laki-laki</label>
+                      </div>
+                      <div class="form-check-inline">
+                        <input class="form-check-input" type="radio" name="gender" value="P">
+                        <label class="form-check-label">Perempuan</label>
+                      </div>
                     </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="berat" class="col-sm-2 col-form-label">Berat (kg)</label>
+                  <div class="col-sm-10">
+                    <input type="number" name="berat" class="form-control" id="berat" placeholder="Berat">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="tinggi" class="col-sm-2 col-form-label">Tinggi (cm)</label>
+                  <div class="col-sm-10">
+                    <input type="number" name="tinggi" class="form-control" id="tinggi" placeholder="Tinggi">
                   </div>
                 </div>
               </div>
               <!-- /.card-body -->
               <div class="card-footer">
-                <button type="submit" class="btn btn-info">Sign in</button>
+                <button type="submit" name="submit" class="btn btn-info">Submit</button>
                 <button type="submit" class="btn btn-default float-right">Cancel</button>
               </div>
               <!-- /.card-footer -->
             </form>
           </div>
-
         </div>
+        <?php
+        if (isset($_POST['submit'])) {
+          $id = end($data)["id"] + 1;
+          $kode = "P00" . (end($data)["id"] + 1);
+          $tgl_periksa = date("Y-m-d");
+          $nama = $_POST["nama"];
+          $tmp_lahir = $_POST["tmp_lahir"];
+          $tgl_lahir = $_POST["tgl_lahir"];
+          $email = $_POST["email"];
+          $gender = $_POST["gender"];
+          $berat = $_POST["berat"];
+          $tinggi = $_POST["tinggi"];
+          // $id, $kode, $nama, $tmp_lahir, $tgl_lahir, $email, $gender;
+          $pasien = new Pasien($id, $kode, $nama, $tmp_lahir, $tgl_lahir, $email, $gender);
+          // $berat, $tinggi
+          $bmi = new BMI($berat, $tinggi);
+          // $id, BMI $bmi, $tanggal, Pasien $pasien
+          $data_bmi[] = new BMIPasien($id, $bmi, $tgl_periksa, $pasien);
+          $nilai_bmi = $bmi->nilaiBMI();
+          $status_bmi = $bmi->statusBMI();
+        }
+        ?>
         <div class="col-12 col-md-4 col-lg-4">
           <div class="card card-info">
             <div class="card-header">
-              <h3 class="card-title">Horizontal Form</h3>
+              <h3 class="card-title">BMI <?= $_POST['nama'] ?></h3>
             </div>
             <div class="card-body">
               <div class="text-center">
-                <input type="text" class="knob" value="0" data-angleArc="250" data-angleOffset="-125" data-width="120" data-height="120" data-fgColor="green" readonly>
-
-                <div class="knob-label">text</div>
-                <div class="knob-label">text</div>
+                <input type="text" class="knob" data-max="<?= ($nilai_bmi > 50) ? $nilai_bmi : 50; ?>" value="<?= number_format((float)$nilai_bmi, 1, '.', ''); ?>" data-angleArc="250" data-angleOffset="-125" data-width="100%" data-height="120" data-fgColor="#17a2b8" readonly>
+                <div class="knob-label"><?= $status_bmi ? $status_bmi : "" ?></div>
+              </div>
+              <div class="text-left mt-5">
+                <div class="row"><?= ($berat) ? "<div class='col-4'>Berat </div> <div class='col-8'> : " . $berat . " kg</div>" : "" ?></div>
+                <div class="row"><?= ($tinggi) ? "<div class='col-4'>Tinggi </div> <div class='col-8'> : " . $tinggi . " cm </div>" : "" ?></div>
+                <div class="row"><?= ($nilai_bmi) ? "<div class='col-4'>Nilai BMI</div> <div class='col-8'> : " . $nilai_bmi . " </div>" : "" ?></div>
+                <div class="row"><?= ($status_bmi) ? "<div class='col-4'>Status BMI</div> <div class='col-8'> : " . $status_bmi . " </div>" : "" ?></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Riwayat Pasien</h3>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Riwayat Pasien</h3>
 
-              <div class="card-tools">
-                <div class="input-group input-group-sm" style="width: 150px;">
-                  <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+            <div class="card-tools">
+              <div class="input-group input-group-sm" style="width: 150px;">
+                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
 
-                  <div class="input-group-append">
-                    <button type="submit" class="btn btn-default">
-                      <i class="fas fa-search"></i>
-                    </button>
-                  </div>
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-default">
+                    <i class="fas fa-search"></i>
+                  </button>
                 </div>
               </div>
             </div>
-            <!-- /.card-header -->
-            <div class="card-body table-responsive p-0">
-              <table class="table table-hover text-nowrap">
-                <thead>
-                  <tr>
-                    <th>NO</th>
-                    <th>Tanggal Periksa</th>
-                    <th>Kode Pasien</th>
-                    <th>Nama Pasien</th>
-                    <th>Gender</th>
-                    <th>Berat(kg)</th>
-                    <th>Tinggi(cm)</th>
-                    <th>Nilai BMI</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  foreach ($data_bmi as $d) {
-                    echo
-                    "<tr>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>NO</th>
+                  <th>Tanggal Periksa</th>
+                  <th>Kode Pasien</th>
+                  <th>Nama Pasien</th>
+                  <th>Gender</th>
+                  <th>Berat(kg)</th>
+                  <th>Tinggi(cm)</th>
+                  <th>Nilai BMI</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                foreach ($data_bmi as $d) {
+                  echo
+                  "<tr>
                       <td>
                         {$d->id}
                       </td>
@@ -202,19 +260,19 @@ foreach ($data as $d) {
                         {$d->bmi->statusBMI()}
                       </td>
                     </tr>";
-                  }
-                  ?>
-                </tbody>
-              </table>
-            </div>
-            <!-- /.card-body -->
+                }
+                ?>
+              </tbody>
+            </table>
           </div>
-          <!-- /.card -->
+          <!-- /.card-body -->
         </div>
+        <!-- /.card -->
       </div>
-    </div><!-- /.container-fluid -->
-  </section>
-  <!-- /.content -->
+    </div>
+</div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
 </div>
 <?php
 require_once "components/footer.php";
