@@ -10,7 +10,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                <img src="https://avatars.githubusercontent.com/u/92297034?s=400&u=f37597de50061645b85f10d3f13742940b64dfd2&v=4" onerror="this.onerror=null; this.src='dist/img/user2-160x160.jpg'" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="https://github.com/amar-ti2021/" class="d-block">Muhammad Amar Dafi</a>
